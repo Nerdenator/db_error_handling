@@ -12,6 +12,25 @@ class TestTable(models.Model):
     same = models.CharField(max_length=3, null=True)
 
 
+def setup_table():
+    """
+    sets up the basic table.
+    several rows will have matching values, some won't.
+    :return: None
+    """
+    row1 = TestTable(value1=1, value2=1)
+    row1.save()
+
+    row2 = TestTable(value1=2, value2=1)
+    row2.save()
+
+    row3 = TestTable(value1=56, value2=1)
+    row3.save()
+
+    row4 = TestTable(value1=10, value2=10)
+    row4.save()
+
+
 def set_yes():
     """
     sets "same" column on rows with matching value1 and value2 columns to "yes"
@@ -54,6 +73,7 @@ def set_no():
     finally:
         cursor.close()
         print_table()
+
 
 def broken_query():
     """
@@ -108,6 +128,7 @@ def reset_table():
     finally:
         cursor.close()
         print_table()
+
 
 def bulk_set():
     try:
