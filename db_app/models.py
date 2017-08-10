@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.db import connection, DatabaseError, transaction
+import pandas as pd
 
 from django.db import models
 
@@ -30,6 +31,7 @@ def set_yes():
         raise
     finally:
         cursor.close()
+        print_table()
 
 
 def set_no():
@@ -51,6 +53,7 @@ def set_no():
         raise
     finally:
         cursor.close()
+        print_table()
 
 def broken_query():
     """
@@ -73,6 +76,18 @@ def broken_query():
     finally:
         cursor.close()
 
+
+def print_table():
+    query = '''
+        SELECT * FROM db_app_testtable;
+    '''
+
+    # No transaction needed for SELECT operations.
+    # using a pandas dataframe per:
+    # https://stackoverflow.com/questions/37051516/printing-a-properly-formatted-sqlite-table-in-python
+    print pd.read_sql_query(query, connection)
+
+
 def reset_table():
     """
     puts all "same" column back to null
@@ -92,6 +107,7 @@ def reset_table():
         raise
     finally:
         cursor.close()
+        print_table()
 
 def bulk_set():
     try:
