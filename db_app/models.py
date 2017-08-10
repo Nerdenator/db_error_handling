@@ -35,15 +35,28 @@ def set_yes():
 def set_no():
     """
     sets "same" column on rows with differing value1 and value2 columns to "no"
-    :return:
+    :return: None
     """
-    pass
+    query = '''
+        UPDATE db_app_testtable
+        SET same = 'no'
+        WHERE value1 != value2
+    '''
+    try:
+        with transaction.atomic():
+            cursor = connection.cursor()
+            cursor.execute(query)
+    except DatabaseError as ex:
+        print "set_no has error %s" % (ex)
+        raise
+    finally:
+        cursor.close()
 
 def broken_query():
     """
     a function meant to break. there is no column named 'different', so this should cause
     a DatabaseError to be thrown upon execution.
-    :return:
+    :return: None
     """
     query = '''
         UPDATE db_app_testtable
@@ -61,4 +74,10 @@ def broken_query():
         cursor.close()
 
 def bulk_set():
-    pass
+    try:
+        set_no()
+        set_yes()
+        broken_query()
+    except Exception as gen_ex:
+        print "Exception has occurred."
+        raise
