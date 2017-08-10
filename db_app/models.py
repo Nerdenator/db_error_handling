@@ -7,7 +7,7 @@ from django.db import models
 class TestTable(models.Model):
     value1 = models.IntegerField()
     value2 = models.IntegerField()
-    same = models.CharField(max_length=3)
+    same = models.CharField(max_length=3, null=True)
 
 
 def set_yes():
