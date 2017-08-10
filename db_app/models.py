@@ -73,6 +73,26 @@ def broken_query():
     finally:
         cursor.close()
 
+def reset_table():
+    """
+    puts all "same" column back to null
+    :return:
+    """
+    query = '''
+        UPDATE db_app_testtable
+        SET same = NULL 
+        WHERE same = "yes" OR same ="no"
+    '''
+    try:
+        with transaction.atomic():
+            cursor = connection.cursor()
+            cursor.execute(query)
+    except DatabaseError as ex:
+        print "reset_table has error % s" % (ex)
+        raise
+    finally:
+        cursor.close()
+
 def bulk_set():
     try:
         set_no()
